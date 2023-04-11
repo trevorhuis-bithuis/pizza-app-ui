@@ -1,13 +1,15 @@
 import type { V2_MetaFunction } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
-  return [{ title: "New Remix App" }];
+  return [{ title: "South Flo Pizza" }];
 };
 
 export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to South Flo Pizza</h1>
+      <h1 className="text-3xl font-bold">
+        Welcome to South Flo Pizza
+      </h1>
       <ul>
         <li>
           <a
