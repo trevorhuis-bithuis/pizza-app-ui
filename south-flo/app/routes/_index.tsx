@@ -39,9 +39,7 @@ export default function Index() {
   return (
     <>
       <Navbar />
-
       <div className="relative overflow-hidden bg-white">
-        {/* Decorative background image and gradient */}
         <div aria-hidden="true" className="absolute inset-0">
           <div className="absolute inset-0 mx-auto max-w-7xl overflow-hidden xl:px-8">
             <img
@@ -54,7 +52,6 @@ export default function Index() {
           <div className="absolute inset-0 bg-gradient-to-t from-white via-white" />
         </div>
 
-        {/* Callout */}
         <section
           aria-labelledby="sale-heading"
           className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pt-32 text-center sm:px-6 lg:px-8"
@@ -72,7 +69,6 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Testimonials */}
         <section
           aria-labelledby="testimonial-heading"
           className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32"
