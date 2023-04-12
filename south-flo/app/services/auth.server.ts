@@ -3,8 +3,8 @@ import { sessionStorage } from "~/services/session.server";
 import { FormStrategy } from "remix-auth-form";
 
 
-type User = {
-    "access_token": string;
+type AccessToken = {
+    "accessToken": string;
 }
 
 async function login(username: FormDataEntryValue | null, password: FormDataEntryValue | null) {
@@ -18,18 +18,21 @@ async function login(username: FormDataEntryValue | null, password: FormDataEntr
             password,
         }),
     });
-    const user = await response.json();
-    return user;
+    if (!response.ok) {
+        throw new Error("Login failed");
+    }
+    const responseJson = await response.json();
+    return { accessToken: responseJson["access_token"] } as AccessToken;
 }
 
-export let authenticator = new Authenticator<User>(sessionStorage);
+export let authenticator = new Authenticator<AccessToken>(sessionStorage);
 
 authenticator.use(
     new FormStrategy(async ({ form }) => {
         let username = form.get("username");
         let password = form.get("password");
-        let user = await login(username, password);
-        return user;
+        let accessToken = await login(username, password);
+        return accessToken;
     }),
     "user-pass"
 );

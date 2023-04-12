@@ -1,11 +1,13 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
-import { LockClosedIcon } from '@heroicons/react/20/solid'
+import { LockClosedIcon, XCircleIcon } from '@heroicons/react/20/solid'
+import { AuthorizationError } from "remix-auth";
 
 
 export default function Login() {
+    const actionData = useActionData();
+
     return (
         <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
@@ -45,6 +47,18 @@ export default function Login() {
                             />
                         </div>
                     </div>
+                    {actionData?.error && (
+                        <div className="rounded-md bg-red-50 p-4">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-red-800">{actionData.error.message}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div>
                         <button
@@ -58,6 +72,7 @@ export default function Login() {
                         </button>
                     </div>
                 </Form>
+
             </div>
         </div>
     );
@@ -65,15 +80,27 @@ export default function Login() {
 
 
 export async function action({ request }: ActionArgs) {
-    return await authenticator.authenticate("user-pass", request, {
-        successRedirect: "/dashboard",
-        failureRedirect: "/login",
-    });
+    try {
+        return await authenticator.authenticate("user-pass", request, {
+            successRedirect: "/login",
+            throwOnError: true,
+        });
+    } catch (error) {
+        if (error instanceof Response) return error;
+        if (error instanceof AuthorizationError) {
+            return {
+                error: {
+                    message: "Invalid username or password",
+                },
+            };
+        }
+    }
+
 };
 
 
 export async function loader({ request }: LoaderArgs) {
     return await authenticator.isAuthenticated(request, {
-        successRedirect: "/dashboard",
+        successRedirect: "/",
     });
 };
