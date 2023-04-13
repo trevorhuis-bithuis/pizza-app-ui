@@ -1,13 +1,20 @@
+import type { PizzaChoice } from "~/types";
 
 type OrderSelectProps = {
-    items: any[];
-    setSelected: () => void;
+    items: PizzaChoice[];
+    defaultChoice: string;
+    setSelected: (obj: PizzaChoice) => void;
     name: string;
 }
 
-export default function OrderSelect(props: OrderSelectProps) {
+export default function OrderRadioSelect(props: OrderSelectProps) {
 
-    const { items, setSelected, name } = props;
+    const { items, setSelected, name, defaultChoice } = props;
+
+    function handleSetSelected(e: React.ChangeEvent<HTMLInputElement>) {
+        const selected = items.find((item) => item.id === e.target.id);
+        setSelected(selected!);
+    }
 
     return (
         <div>
@@ -23,9 +30,9 @@ export default function OrderSelect(props: OrderSelectProps) {
                                     aria-describedby={`${item.id}-description`}
                                     name={name}
                                     type="radio"
-                                    defaultChecked={item.id === 'normal'}
+                                    defaultChecked={item.id === defaultChoice}
                                     className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                    onChange={setSelected}
+                                    onChange={handleSetSelected}
                                 />
                             </div>
                             <div className="ml-3 text-sm leading-6">

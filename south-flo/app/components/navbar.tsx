@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useMatches } from '@remix-run/react'
 
 
-function classNames(...classes: any) {
+function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
@@ -48,14 +48,14 @@ export default function Navbar() {
                                         <img
                                             className="block h-12 w-auto lg:hidden rounded-full"
                                             src="https://img.freepik.com/premium-vector/pizza-logo-template-suitable-restaurant-cafe-logo_607277-267.jpg?w=2000"
-                                            alt="Your Company"
+                                            alt="South Flo Pizza"
                                         />
                                     </Link>
                                     <Link to="/">
                                         <img
                                             className="hidden h-12 w-auto lg:block rounded-full"
                                             src="https://img.freepik.com/premium-vector/pizza-logo-template-suitable-restaurant-cafe-logo_607277-267.jpg?w=2000"
-                                            alt="Your Company"
+                                            alt="South Flo Pizza"
                                         />
                                     </Link>
                                 </div>
