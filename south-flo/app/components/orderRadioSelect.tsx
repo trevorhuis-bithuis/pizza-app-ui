@@ -18,7 +18,6 @@ export default function OrderRadioSelect(props: OrderSelectProps) {
 
     return (
         <div>
-            <h1 className="text-xl">{name}</h1>
             <fieldset id="sizes-select">
                 <legend className="sr-only">{name}</legend>
                 <div className="space-y-2">
@@ -29,6 +28,7 @@ export default function OrderRadioSelect(props: OrderSelectProps) {
                                     id={item.id}
                                     aria-describedby={`${item.id}-description`}
                                     name={name}
+                                    value={item.id}
                                     type="radio"
                                     defaultChecked={item.id === defaultChoice}
                                     className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
