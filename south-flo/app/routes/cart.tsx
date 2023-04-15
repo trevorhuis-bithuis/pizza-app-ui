@@ -1,43 +1,52 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import type { LoaderArgs } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import Navbar from "~/components/navbar";
 import TableSelect from "~/components/tableSelect";
 import { authenticator } from "~/services/auth.server";
+import { getCart, getRedisSessionToken, purchaseCart, removePizzaFromCart } from "~/services/cart.server";
+import { getSession } from "~/services/session.server";
 import type { Pizza, Table } from "~/types";
-
-let tables: Table[] = [{ id: 0, name: 'Select a table' }]
-
-for (let i = 1; i <= 20; i++) {
-    tables.push({
-        id: i,
-        name: `Table ${i}`,
-    })
-}
+import { tables } from "~/constants";
 
 export async function loader({ request }: LoaderArgs) {
-    return await authenticator.isAuthenticated(request, {
+    await authenticator.isAuthenticated(request, {
         failureRedirect: "/login",
     });
+
+    const session = await getSession(request.headers.get("cookie"));
+    const accessToken = session.data.user.accessToken;
+
+    const cart = await getCart(getRedisSessionToken(accessToken));
+    return cart;
 };
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: LoaderArgs) {
+    let formData = await request.formData();
+    let { _action, ...values } = Object.fromEntries(formData);
+
+    const session = await getSession(request.headers.get("cookie"));
+    const accessToken = session.data.user.accessToken;
+
+    if (_action === 'create') {
+        const table = values.table as unknown as string;
+
+        await purchaseCart(getRedisSessionToken(accessToken), parseInt(table), accessToken);
+    }
+
+    if (_action === 'delete') {
+        await removePizzaFromCart(getRedisSessionToken(accessToken), values.id as string);
+    }
+
+    return null;
 
 }
 
 export default function Cart() {
-    const [pizzas, setPizzas] = useState<Pizza[]>([]);
+    const cart = useLoaderData();
+    const pizzas = cart.pizzas as unknown as Pizza[];
+
     const [table, setTable] = useState<Table>({ id: 0, name: 'Select a table' });
-
-    useEffect(() => {
-        updateCart();
-    }, []);
-
-
-    function updateCart() {
-        const cart = JSON.parse(window.localStorage.getItem('cart') || '[]');
-        setPizzas(cart);
-    }
 
     function createDollarDisplay(price: number) {
         return `$${price.toFixed(2)}`;
@@ -51,20 +60,20 @@ export default function Cart() {
         return Math.round(((calculateSubTotal()) * 0.0825) * 100) / 100;
     }
 
-    function removePizzaFromCart(id: string) {
-        const cart = JSON.parse(window.localStorage.getItem('cart') || '[]');
-        const newCart = cart.filter((pizza: Pizza) => pizza.id !== id);
-        window.localStorage.setItem('cart', JSON.stringify(newCart));
-        updateCart();
-    }
-
     return (
         <>
             <Navbar />
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-0">
                 <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+                {(!pizzas || pizzas.length === 0) &&
+                    <div className="my-8 text-center"> <p className="text-center text-xl font-bold tracking-tight text-gray-900 sm:text-2xl">Your cart is empty</p>
+                        <Link to="/order" className="font-medium text-indigo-600 hover:text-indigo-500">
+                            {' '}Order Here
+                            <span aria-hidden="true"> &rarr;</span>
+                        </Link>
+                    </div>}
 
-                <Form className="mt-12">
+                {(pizzas && pizzas.length !== 0) && <Form className="mt-12" method="post">
                     <section aria-labelledby="cart-heading">
                         <ul className="divide-y divide-gray-200 border-b border-t border-gray-200">
                             {pizzas.map((pizza) => (
@@ -91,12 +100,19 @@ export default function Cart() {
                                         </div>
 
                                         <div className="mt-4 flex flex-1 items-end justify-between">
-                                            <div className="ml-4">
-                                                <button type="button" className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                                                    onClick={() => { removePizzaFromCart(pizza.id) }}>
-                                                    <span>Remove</span>
-                                                </button>
-                                            </div>
+                                            <Form method="POST">
+                                                <input type="hidden" name="id" value={pizza.id} />
+                                                <div className="ml-4">
+                                                    <button className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                                        type="submit"
+                                                        name="_action"
+                                                        value="delete"
+                                                    >
+                                                        <span>Remove</span>
+                                                    </button>
+                                                </div>
+                                            </Form>
+
                                         </div>
                                     </div>
                                 </li>
@@ -128,15 +144,18 @@ export default function Cart() {
                             </div>
                         </div>
 
+                        <input type="hidden" name="table" value={table.id} />
                         <TableSelect tables={tables} setTable={setTable} />
 
                         <div className="mt-10">
                             <button
                                 type="submit"
+                                name="_action"
+                                value="create"
                                 className="disabled:opacity-50 w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                                 disabled={table.id === 0 || pizzas.length === 0}
                             >
-                                Checkout
+                                Place Order
                             </button>
                         </div>
 
@@ -151,7 +170,7 @@ export default function Cart() {
                         </div>
                     </section>
 
-                </Form>
+                </Form>}
             </div>
         </>
 

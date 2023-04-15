@@ -11,6 +11,22 @@ export type Pizza = {
     size: Size;
 }
 
+export type PizzaFormData = {
+    crust: string;
+    toppings: string[];
+    size: string;
+    price: string;
+}
+
+export type PizzaApiData = {
+    Crust: string;
+    Flavor: string;
+    Order_ID?: number;
+    Size: string;
+    Table_No: number;
+    Timestamp?: string;
+}
+
 export type PizzaChoice = {
     id: string;
     name: string;
