@@ -51,11 +51,17 @@ export function createFullPizzaInfo(pizza: PizzaFormData): Pizza {
 export async function purchaseCart(sessionToken: string, tableId: number, accessToken: string) {
     const cart: any = await getCart(sessionToken);
 
-    cart.pizzas.forEach(async (pizza: Pizza) => {
-        await postPizzaOrder(pizza, tableId, accessToken);
-    });
+    try {
+        cart.pizzas.forEach(async (pizza: Pizza) => {
+            await postPizzaOrder(pizza, tableId, accessToken);
+        });
 
-    await redis.json.set(sessionToken, "$.pizzas", JSON.stringify([]));
+
+        await redis.json.set(sessionToken, "$.pizzas", JSON.stringify([]));
+    } catch (e) {
+        console.log(e);
+    }
+
 
 }
 

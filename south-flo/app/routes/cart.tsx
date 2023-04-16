@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import { redirect, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Navbar from "~/components/navbar";
@@ -38,7 +38,7 @@ export async function action({ request }: LoaderArgs) {
         await removePizzaFromCart(getRedisSessionToken(accessToken), values.id as string);
     }
 
-    return null;
+    return redirect('/history');
 
 }
 
@@ -100,18 +100,16 @@ export default function Cart() {
                                         </div>
 
                                         <div className="mt-4 flex flex-1 items-end justify-between">
-                                            <Form method="POST">
-                                                <input type="hidden" name="id" value={pizza.id} />
-                                                <div className="ml-4">
-                                                    <button className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                                                        type="submit"
-                                                        name="_action"
-                                                        value="delete"
-                                                    >
-                                                        <span>Remove</span>
-                                                    </button>
-                                                </div>
-                                            </Form>
+                                            <input type="hidden" name="id" value={pizza.id} />
+                                            <div className="ml-4">
+                                                <button className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                                    type="submit"
+                                                    name="_action"
+                                                    value="delete"
+                                                >
+                                                    <span>Remove</span>
+                                                </button>
+                                            </div>
 
                                         </div>
                                     </div>
