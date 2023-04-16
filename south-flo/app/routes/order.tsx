@@ -1,5 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Form } from "@remix-run/react";
 import Navbar from "~/components/navbar";
 import OrderAddedToCartAlert from "~/components/orderAddedToCart";
@@ -20,10 +20,24 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ request }: LoaderArgs) {
     let formData = await request.formData();
-    let pizza: PizzaFormData = Object.fromEntries(formData.entries()) as unknown as PizzaFormData;
+    const form = Object.fromEntries(formData.entries());
+    const toppings: string[] = [];
+
+    for (const [key, value] of Object.entries(form)) {
+        if (key.startsWith('topping')) {
+            toppings.push(value as string);
+        }
+    }
 
     const session = await getSession(request.headers.get("cookie"));
     const accessToken = session.data.user.accessToken;
+
+    const pizza: PizzaFormData = {
+        size: form.size as string,
+        crust: form.crust as string,
+        toppings: toppings,
+        price: form.price as string
+    }
 
     try {
         addPizzaToCart(accessToken, pizza);
@@ -39,7 +53,6 @@ export default function Order() {
     const [crust, setCrust] = useState<Crust>(crustChoices[0]);
     const [toppings, setToppings] = useState<Topping[]>([]);
     const [orderComplete, setOrderComplete] = useState(false);
-    let formRef = useRef<HTMLFormElement>(null);
 
     function calculatePizzaPrice() {
         return size.price + toppings.reduce((acc, topping) => acc + (topping.price), 0) + crust.price
@@ -49,7 +62,7 @@ export default function Order() {
         <>
             <Navbar />
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                <Form ref={formRef} method="POST">
+                <Form method="POST">
                     <div className="my-6">
                         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Order</h1>
                     </div>
@@ -71,13 +84,13 @@ export default function Order() {
                                 <fieldset>
                                     <legend className="sr-only">Toppings</legend>
                                     <div className="space-y-2">
-                                        {toppingsChoices.map((topping) => (
+                                        {toppingsChoices.map((topping, toppingIdx) => (
                                             <div key={topping.id} className="relative flex items-start">
                                                 <div className="flex h-6 items-center">
                                                     <input
-                                                        id="toppings"
+                                                        id={`toppings-${toppingIdx}`}
                                                         aria-describedby={`${topping.id}-description`}
-                                                        name="toppings"
+                                                        name={`topping-${toppingIdx}`}
                                                         type="checkbox"
                                                         value={topping.id}
                                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"

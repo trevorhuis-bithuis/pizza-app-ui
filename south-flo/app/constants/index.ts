@@ -8,11 +8,11 @@ export const sizeChoices: Size[] = [
 ]
 
 export const toppingsChoices: Topping[] = [
-    { id: 'pepperoni', name: 'Pepperoni', price: 2, apiVersion: 'PEPPERONI' },
-    { id: 'sausage', name: 'Sausage', price: 2, apiVersion: 'SAUSAGE' },
-    { id: 'mushrooms', name: 'Mushrooms', price: 1, apiVersion: 'MUSHROOMS' },
-    { id: 'onions', name: 'Onions', price: 1, apiVersion: 'ONIONS' },
-    { id: 'green-peppers', name: 'Green Peppers', price: 1, apiVersion: 'GREEN_PEPPERS' },
+    { id: 'pepperoni', name: 'Pepperoni', price: 2, apiVersion: 'PEP' },
+    { id: 'sausage', name: 'Sausage', price: 2, apiVersion: 'SSG' },
+    { id: 'mushrooms', name: 'Mushrooms', price: 1, apiVersion: 'MSHROM' },
+    { id: 'onions', name: 'Onions', price: 1, apiVersion: 'ONION' },
+    { id: 'green-peppers', name: 'Green Peppers', price: 1, apiVersion: 'GRNP' },
 ]
 
 export const crustChoices: Crust[] = [

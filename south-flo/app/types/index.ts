@@ -27,6 +27,16 @@ export type PizzaApiData = {
     Timestamp?: string;
 }
 
+export type PizzaOrderHistory = {
+    id: string;
+    size: Size;
+    crust: Crust;
+    toppings: Topping[];
+    table: number;
+    timestamp: any;
+    searchToken?: string;
+}
+
 export type PizzaChoice = {
     id: string;
     name: string;
