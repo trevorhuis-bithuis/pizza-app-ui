@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import shortUUID from "short-uuid";
 import { crustChoices, sizeChoices, toppingsChoices } from "~/constants";
 import type { Crust, Pizza, PizzaFormData, Size } from "~/types";
-import { postPizzaOrder } from "./pizzaApi.server";
+import { deleteOrder, postPizzaOrder } from "./pizzaApi.server";
 
 const redis = new Redis({
   url: "https://us1-amusing-ewe-37931.upstash.io",
@@ -70,15 +70,29 @@ export async function purchaseCart(
   accessToken: string
 ) {
   const cart: any = await getCart(sessionToken);
+  let isError = false;
+  const orderedPizzas: any[] = [];
 
-  try {
-    cart.pizzas.forEach(async (pizza: Pizza) => {
-      await postPizzaOrder(pizza, tableId, accessToken);
-    });
+  for await (const pizza of cart.pizzas) {
+    const { data, error } = await postPizzaOrder(pizza, tableId, accessToken);
+    if (error) {
+      isError = true;
+    } else {
+      orderedPizzas.push(data);
+    }
+  };
 
+  if (isError) {
+    for await (const pizza of orderedPizzas) {
+      await deleteOrder(pizza.Order_ID);
+    }
+  } else {
     await redis.json.set(sessionToken, "$.pizzas", JSON.stringify([]));
-  } catch (e) {
-    console.log(e);
+  }
+
+  return {
+    error: isError,
+    data: cart.pizzas,
   }
 }
 

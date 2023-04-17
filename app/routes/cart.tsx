@@ -47,41 +47,38 @@ export async function action({ request }: LoaderArgs) {
   if (_action === "create") {
     const table = values.table as unknown as string;
 
-    try {
-      await purchaseCart(
-        getRedisSessionToken(accessToken),
-        parseInt(table),
-        accessToken
-      );
-    } catch (error) {
-      console.error(error);
+
+    const { error } = await purchaseCart(
+      getRedisSessionToken(accessToken),
+      parseInt(table),
+      accessToken
+    );
+
+    if (error) {
       return {
-        status: 500,
-        action: "create",
-        message:
-          "Something went wrong ordering your pizza. Try logging out and back in again.",
-      };
-    }
+        error: {
+          status: 500,
+          action: "create",
+          message:
+            "Something went wrong ordering your pizza. Try logging out and back in again.",
+        }
+      }
+    } else {
+      return redirect("/history");
+    };
+
+
   }
 
   if (_action === "delete") {
-    try {
-      await removePizzaFromCart(
-        getRedisSessionToken(accessToken),
-        values.id as string
-      );
-    } catch (error) {
-      console.error(error);
-      return {
-        status: 500,
-        action: "delete",
-        message:
-          "Something went wrong removing the pizza from your cart. Try logging out and back in again.",
-      };
-    }
+    await removePizzaFromCart(
+      getRedisSessionToken(accessToken),
+      values.id as string
+    );
+
+    return null;
   }
 
-  return redirect("/history");
 }
 
 export default function Cart() {
@@ -128,7 +125,9 @@ export default function Cart() {
         )}
 
         {actionData?.error && (
-          <ErrorDisplay message={actionData.error.message} />
+          <div className="my-4">
+            <ErrorDisplay message={actionData.error.message} />
+          </div>
         )}
 
         {pizzas && pizzas.length !== 0 && (
