@@ -47,7 +47,6 @@ export async function action({ request }: LoaderArgs) {
   if (_action === "create") {
     const table = values.table as unknown as string;
 
-
     const { error } = await purchaseCart(
       getRedisSessionToken(accessToken),
       parseInt(table),
@@ -61,13 +60,11 @@ export async function action({ request }: LoaderArgs) {
           action: "create",
           message:
             "Something went wrong ordering your pizza. Try logging out and back in again.",
-        }
-      }
+        },
+      };
     } else {
       return redirect("/history");
-    };
-
-
+    }
   }
 
   if (_action === "delete") {
@@ -78,7 +75,6 @@ export async function action({ request }: LoaderArgs) {
 
     return null;
   }
-
 }
 
 export default function Cart() {

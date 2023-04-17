@@ -80,7 +80,7 @@ export async function purchaseCart(
     } else {
       orderedPizzas.push(data);
     }
-  };
+  }
 
   if (isError) {
     for await (const pizza of orderedPizzas) {
@@ -93,7 +93,7 @@ export async function purchaseCart(
   return {
     error: isError,
     data: cart.pizzas,
-  }
+  };
 }
 
 export function getRedisSessionToken(accessToken: string) {

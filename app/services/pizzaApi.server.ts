@@ -15,8 +15,9 @@ export async function postPizzaOrder(
 
   const data: PizzaApiData = {
     Crust: pizza.crust.apiVersion,
-    Flavor: `CHZ${toppingApiVersions.length > 0 ? "-" : ""
-      }${toppingApiVersions.join("-")}`,
+    Flavor: `CHZ${
+      toppingApiVersions.length > 0 ? "-" : ""
+    }${toppingApiVersions.join("-")}`,
     Size: pizza.size.apiVersion,
     Table_No: table,
   };
@@ -36,7 +37,6 @@ export async function postPizzaOrder(
     data: response.json(),
     error: response.status !== 201,
   };
-
 }
 
 export async function loginHeb(
