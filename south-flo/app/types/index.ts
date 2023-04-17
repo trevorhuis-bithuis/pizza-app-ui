@@ -1,48 +1,48 @@
 export type Table = {
-    id: number
-    name: string
-}
+  id: number;
+  name: string;
+};
 
 export type Pizza = {
-    id: string;
-    price: number;
-    crust: Crust;
-    toppings: Topping[];
-    size: Size;
-}
+  id: string;
+  price: number;
+  crust: Crust;
+  toppings: Topping[];
+  size: Size;
+};
 
 export type PizzaFormData = {
-    crust: string;
-    toppings: string[];
-    size: string;
-    price: string;
-}
+  crust: string;
+  toppings: string[];
+  size: string;
+  price: string;
+};
 
 export type PizzaApiData = {
-    Crust: string;
-    Flavor: string;
-    Order_ID?: number;
-    Size: string;
-    Table_No: number;
-    Timestamp?: string;
-}
+  Crust: string;
+  Flavor: string;
+  Order_ID?: number;
+  Size: string;
+  Table_No: number;
+  Timestamp?: string;
+};
 
 export type PizzaOrderHistory = {
-    id: string;
-    size: Size;
-    crust: Crust;
-    toppings: Topping[];
-    table: number;
-    timestamp: any;
-    searchToken?: string;
-}
+  id: string;
+  size: Size;
+  crust: Crust;
+  toppings: Topping[];
+  table: number;
+  timestamp: any;
+  searchToken?: string;
+};
 
 export type PizzaChoice = {
-    id: string;
-    name: string;
-    price: number;
-    apiVersion: string;
-}
+  id: string;
+  name: string;
+  price: number;
+  apiVersion: string;
+};
 
 export type Crust = PizzaChoice;
 export type Topping = PizzaChoice;

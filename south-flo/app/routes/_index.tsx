@@ -12,28 +12,25 @@ export async function loader({ request }: LoaderArgs) {
   return await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-};
+}
 
 const testimonials = [
   {
     id: 1,
-    quote:
-      `I've tried pizza all over the world, but I have to say, the pizza at this restaurant is simply unbeatable. From the crispy crust to the perfectly balanced toppings, every bite is a delight. It's no wonder they're always packed!`,
-    attribution: 'Sarah Peters, Houston',
+    quote: `I've tried pizza all over the world, but I have to say, the pizza at this restaurant is simply unbeatable. From the crispy crust to the perfectly balanced toppings, every bite is a delight. It's no wonder they're always packed!`,
+    attribution: "Sarah Peters, Houston",
   },
   {
     id: 2,
-    quote:
-      `I'm a self-proclaimed pizza connoisseur, and I can confidently say that this restaurant makes the best pizza in town. The sauce is rich and tangy, the cheese is melty and gooey, and the crust has just the right amount of chewiness. It's the kind of pizza that keeps you coming back for more.`,
-    attribution: 'Kelly McPherson, Austin',
+    quote: `I'm a self-proclaimed pizza connoisseur, and I can confidently say that this restaurant makes the best pizza in town. The sauce is rich and tangy, the cheese is melty and gooey, and the crust has just the right amount of chewiness. It's the kind of pizza that keeps you coming back for more.`,
+    attribution: "Kelly McPherson, Austin",
   },
   {
     id: 3,
-    quote:
-      `I recently discovered this hidden gem of a pizza place, and I am blown away by how good the pizza is. The ingredients are fresh and high-quality, and the flavors are out of this world. I can't believe I've been missing out on this pizza for so long!`,
-    attribution: 'Chris Paul, San Antonio',
+    quote: `I recently discovered this hidden gem of a pizza place, and I am blown away by how good the pizza is. The ingredients are fresh and high-quality, and the flavors are out of this world. I can't believe I've been missing out on this pizza for so long!`,
+    attribution: "Chris Paul, San Antonio",
   },
-]
+];
 
 export default function Index() {
   return (
@@ -57,7 +54,10 @@ export default function Index() {
           className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pt-32 text-center sm:px-6 lg:px-8"
         >
           <div className="mx-auto max-w-2xl lg:max-w-none">
-            <h2 id="sale-heading" className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+            <h2
+              id="sale-heading"
+              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
+            >
               Order a South Flo Pizza today!!
             </h2>
             <Link
@@ -74,7 +74,10 @@ export default function Index() {
           className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32"
         >
           <div className="mx-auto max-w-2xl lg:max-w-none">
-            <h2 id="testimonial-heading" className="text-2xl font-bold tracking-tight text-gray-900">
+            <h2
+              id="testimonial-heading"
+              className="text-2xl font-bold tracking-tight text-gray-900"
+            >
               What are people saying?
             </h2>
 
@@ -95,7 +98,9 @@ export default function Index() {
                   </svg>
                   <div className="mt-8 sm:ml-6 sm:mt-0 lg:ml-0 lg:mt-10">
                     <p className="text-lg text-gray-600">{testimonial.quote}</p>
-                    <cite className="mt-4 block font-semibold not-italic text-gray-900">{testimonial.attribution}</cite>
+                    <cite className="mt-4 block font-semibold not-italic text-gray-900">
+                      {testimonial.attribution}
+                    </cite>
                   </div>
                 </blockquote>
               ))}
@@ -106,4 +111,3 @@ export default function Index() {
     </>
   );
 }
-
