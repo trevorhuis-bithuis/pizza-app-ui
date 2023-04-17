@@ -2,7 +2,7 @@ import { Authenticator } from "remix-auth";
 import { sessionStorage } from "~/services/session.server";
 import { FormStrategy } from "remix-auth-form";
 import { createCart } from "~/services/cart.server";
-import { loginHeb } from "./hebPizzaApi";
+import { loginHeb } from "./pizzaApi.server";
 
 type User = {
   accessToken: string;

@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import shortUUID from "short-uuid";
 import { crustChoices, sizeChoices, toppingsChoices } from "~/constants";
 import type { Crust, Pizza, PizzaFormData, Size } from "~/types";
-import { postPizzaOrder } from "./hebPizzaApi";
+import { postPizzaOrder } from "./pizzaApi.server";
 
 const redis = new Redis({
   url: "https://us1-amusing-ewe-37931.upstash.io",

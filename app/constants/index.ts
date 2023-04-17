@@ -9,10 +9,10 @@ export const sizeChoices: Size[] = [
 
 export const toppingsChoices: Topping[] = [
   { id: "pepperoni", name: "Pepperoni", price: 2, apiVersion: "PEP" },
-  { id: "sausage", name: "Sausage", price: 2, apiVersion: "SSG" },
-  { id: "mushrooms", name: "Mushrooms", price: 1, apiVersion: "MSHROM" },
+  { id: "chicken", name: "Chicken", price: 2, apiVersion: "CHICKEN" },
+  { id: "beef", name: "Beef", price: 1, apiVersion: "BEEF" },
   { id: "onions", name: "Onions", price: 1, apiVersion: "ONION" },
-  { id: "green-peppers", name: "Green Peppers", price: 1, apiVersion: "GRNP" },
+  { id: "fajita", name: "Fajita Veggies", price: 1, apiVersion: "FAJITA" },
 ];
 
 export const crustChoices: Crust[] = [

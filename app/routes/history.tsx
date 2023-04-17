@@ -1,7 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
 import Navbar from "~/components/navbar";
 import { authenticator } from "~/services/auth.server";
-import { deleteOrder, getOrders } from "~/services/hebPizzaApi";
+import { deleteOrder, getOrders } from "~/services/pizzaApi.server";
 import { Form, useLoaderData, type V2_MetaFunction } from "@remix-run/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
