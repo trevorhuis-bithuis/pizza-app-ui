@@ -2,11 +2,15 @@ import type { LoaderArgs } from "@remix-run/node";
 import Navbar from "~/components/navbar";
 import { authenticator } from "~/services/auth.server";
 import { deleteOrder, getOrders } from "~/services/hebPizzaApi";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, type V2_MetaFunction } from "@remix-run/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
 import type { PizzaOrderHistory } from "~/types";
 import { useEffect, useState } from "react";
+
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "History" }];
+};
 
 export async function loader({ request }: LoaderArgs) {
   await authenticator.isAuthenticated(request, {

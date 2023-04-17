@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { useState } from "react";
-import { Form } from "@remix-run/react";
+import { Form, type V2_MetaFunction } from "@remix-run/react";
 import Navbar from "~/components/navbar";
 import OrderAddedToCartAlert from "~/components/orderAddedToCart";
 import OrderRadioSelect from "~/components/orderRadioSelect";
@@ -10,6 +10,10 @@ import { crustChoices, sizeChoices, toppingsChoices } from "~/constants";
 import { addPizzaToCart } from "~/services/cart.server";
 import { getSession } from "~/services/session.server";
 import OrderSummaryTable from "~/components/orderSummaryTable";
+
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Order" }];
+};
 
 export async function loader({ request }: LoaderArgs) {
   return await authenticator.isAuthenticated(request, {

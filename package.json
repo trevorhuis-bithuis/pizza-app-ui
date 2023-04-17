@@ -8,7 +8,8 @@
     "start": "remix-serve build",
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "precommit": "npm run format && npm run lint && npm run typecheck"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.312.0",

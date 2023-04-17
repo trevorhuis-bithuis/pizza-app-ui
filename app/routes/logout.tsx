@@ -1,6 +1,10 @@
 import type { ActionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, type V2_MetaFunction } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
+
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Logout" }];
+};
 
 export async function action({ request }: ActionArgs) {
   await authenticator.logout(request, { redirectTo: "/login" });

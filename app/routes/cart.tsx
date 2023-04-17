@@ -1,5 +1,11 @@
 import { redirect, type LoaderArgs } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useLoaderData,
+  type V2_MetaFunction,
+} from "@remix-run/react";
 import { useState } from "react";
 import Navbar from "~/components/navbar";
 import TableSelect from "~/components/tableSelect";
@@ -13,6 +19,11 @@ import {
 import { getSession } from "~/services/session.server";
 import type { Pizza, Table } from "~/types";
 import { tables } from "~/constants";
+import ErrorDisplay from "~/components/errorDisplay";
+
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Cart" }];
+};
 
 export async function loader({ request }: LoaderArgs) {
   await authenticator.isAuthenticated(request, {
@@ -27,8 +38,8 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export async function action({ request }: LoaderArgs) {
-  let formData = await request.formData();
-  let { _action, ...values } = Object.fromEntries(formData);
+  const formData = await request.formData();
+  const { _action, ...values } = Object.fromEntries(formData);
 
   const session = await getSession(request.headers.get("cookie"));
   const accessToken = session.data.user.accessToken;
@@ -36,26 +47,45 @@ export async function action({ request }: LoaderArgs) {
   if (_action === "create") {
     const table = values.table as unknown as string;
 
-    // TODO: Add error handling
-    await purchaseCart(
-      getRedisSessionToken(accessToken),
-      parseInt(table),
-      accessToken
-    );
+    try {
+      await purchaseCart(
+        getRedisSessionToken(accessToken),
+        parseInt(table),
+        accessToken
+      );
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        action: "create",
+        message:
+          "Something went wrong ordering your pizza. Try logging out and back in again.",
+      };
+    }
   }
 
   if (_action === "delete") {
-    // TODO: Add error handling
-    await removePizzaFromCart(
-      getRedisSessionToken(accessToken),
-      values.id as string
-    );
+    try {
+      await removePizzaFromCart(
+        getRedisSessionToken(accessToken),
+        values.id as string
+      );
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        action: "delete",
+        message:
+          "Something went wrong removing the pizza from your cart. Try logging out and back in again.",
+      };
+    }
   }
 
   return redirect("/history");
 }
 
 export default function Cart() {
+  const actionData = useActionData();
   const cart = useLoaderData();
   const pizzas = cart.pizzas as unknown as Pizza[];
 
@@ -95,6 +125,10 @@ export default function Cart() {
               <span aria-hidden="true"> &rarr;</span>
             </Link>
           </div>
+        )}
+
+        {actionData?.error && (
+          <ErrorDisplay message={actionData.error.message} />
         )}
 
         {pizzas && pizzas.length !== 0 && (

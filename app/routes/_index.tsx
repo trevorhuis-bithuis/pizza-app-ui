@@ -3,6 +3,7 @@ import type { V2_MetaFunction } from "@remix-run/react";
 import { Link } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
 import Navbar from "~/components/navbar";
+import { testimonials } from "~/constants";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: "South Flo Pizza" }];
@@ -13,24 +14,6 @@ export async function loader({ request }: LoaderArgs) {
     failureRedirect: "/login",
   });
 }
-
-const testimonials = [
-  {
-    id: 1,
-    quote: `I've tried pizza all over the world, but I have to say, the pizza at this restaurant is simply unbeatable. From the crispy crust to the perfectly balanced toppings, every bite is a delight. It's no wonder they're always packed!`,
-    attribution: "Sarah Peters, Houston",
-  },
-  {
-    id: 2,
-    quote: `I'm a self-proclaimed pizza connoisseur, and I can confidently say that this restaurant makes the best pizza in town. The sauce is rich and tangy, the cheese is melty and gooey, and the crust has just the right amount of chewiness. It's the kind of pizza that keeps you coming back for more.`,
-    attribution: "Kelly McPherson, Austin",
-  },
-  {
-    id: 3,
-    quote: `I recently discovered this hidden gem of a pizza place, and I am blown away by how good the pizza is. The ingredients are fresh and high-quality, and the flavors are out of this world. I can't believe I've been missing out on this pizza for so long!`,
-    attribution: "Chris Paul, San Antonio",
-  },
-];
 
 export default function Index() {
   return (
